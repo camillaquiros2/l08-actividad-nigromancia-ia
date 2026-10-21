@@ -124,7 +124,15 @@ class Game : GameSession {
      * 5. Retornar true.
      */
     fun resurrect(): Boolean {
-        // TODO: Implementar cooldown y resurrección masiva
-        return false
+        if (ability.timer < ability.cooldown) return false
+        ability.timer = 0.0
+
+        val corpses = objects.filter { it.isTagged(Tags.CORPSE) }
+        for (corpse in corpses) {
+            despawn(corpse)
+            val skeleton = createSkeleton()
+            spawn(skeleton, corpse.x, 0.0)
+        }
+        return true
     }
 }
